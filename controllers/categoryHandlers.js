@@ -33,8 +33,24 @@ const getCategory = async (req, res) => {
   }
 };
 
-const createCategory = (req, res) => {
-  // create a new category
+const createCategory = async (req, res) => {
+  try {
+    const { category_name } = req.body;
+    if (category_name) {
+      const newCategory = await Category.create(req.body);
+      res.json(newCategory);
+    } else {
+      console.log(`[ERROR]: Unable to create a category`);
+      res.status(404).json({
+        error: "Unable to create a category",
+      });
+    }
+  } catch (error) {
+    console.log(`[ERROR]: ${error.message}`);
+    res.status(500).json({
+      error: "Failed to create category",
+    });
+  }
 };
 
 const updateCategory = (req, res) => {
