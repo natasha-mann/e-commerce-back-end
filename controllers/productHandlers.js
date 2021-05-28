@@ -120,8 +120,30 @@ const updateProduct = (req, res) => {
     });
 };
 
-const deleteProduct = (req, res) => {
+const deleteProduct = async (req, res) => {
   // delete one product by its `id` value
+  try {
+    const product = await Product.findByPk(req.params.id);
+
+    if (product) {
+      const newProduct = await Product.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.json(newProduct);
+    } else {
+      console.log(`[ERROR]: Unable to delete the product`);
+      res.status(404).json({
+        error: "Unable to delete the product",
+      });
+    }
+  } catch (error) {
+    console.log(`[ERROR]: ${error.message}`);
+    res.status(500).json({
+      error: "Failed to delete product",
+    });
+  }
 };
 
 module.exports = {
