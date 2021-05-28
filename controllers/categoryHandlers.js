@@ -24,7 +24,14 @@ const getCategory = async (req, res) => {
     const category = await Category.findByPk(req.params.id, {
       include: [Product],
     });
-    res.json(category);
+    if (category) {
+      res.json(category);
+    } else {
+      console.log(`[INVALID ID]: Unable to get category by ID`);
+      res.status(404).json({
+        error: "Unable to get category by ID",
+      });
+    }
   } catch (err) {
     console.log(`[ERROR]: ${err.message}`);
     res.status(500).json({

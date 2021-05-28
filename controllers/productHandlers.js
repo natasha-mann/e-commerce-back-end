@@ -19,6 +19,24 @@ const getAllProducts = async (req, res) => {
 const getProduct = async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
+  try {
+    const product = await Product.findByPk(req.params.id, {
+      include: [Category, Tag],
+    });
+    if (product) {
+      res.json(product);
+    } else {
+      console.log(`[INVALID ID]: Unable to get product by ID`);
+      res.status(404).json({
+        error: "Unable to get product by ID",
+      });
+    }
+  } catch (err) {
+    console.log(`[ERROR]: ${err.message}`);
+    res.status(500).json({
+      error: "Failed to get product",
+    });
+  }
 };
 
 const createProduct = (req, res) => {
