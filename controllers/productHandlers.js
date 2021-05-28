@@ -3,13 +3,11 @@ const { Product, Category, Tag, ProductTag } = require("../models");
 const getAllProducts = async (req, res) => {
   // find all products
   // be sure to include its associated Category and Tag data
-}
 };
 
 const getProduct = async (req, res) => {
   // find a single product by its `id`
   // be sure to include its associated Category and Tag data
-}
 };
 
 const createProduct = (req, res) => {
@@ -41,7 +39,7 @@ const createProduct = (req, res) => {
       console.log(err);
       res.status(400).json(err);
     });
-}
+};
 
 const updateProduct = (req, res) => {
   // update product data
@@ -82,11 +80,11 @@ const updateProduct = (req, res) => {
       // console.log(err);
       res.status(400).json(err);
     });
-}
+};
 
 const deleteProduct = (req, res) => {
   // delete one product by its `id` value
-}
+};
 
 module.exports = {
   getAllProducts,

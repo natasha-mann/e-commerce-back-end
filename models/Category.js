@@ -9,7 +9,7 @@ const schema = {
     primaryKey: true,
     autoIncrement: true,
   },
-  categoryName: {
+  category_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },

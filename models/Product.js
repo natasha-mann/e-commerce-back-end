@@ -8,7 +8,7 @@ const schema = {
     primaryKey: true,
     autoIncrement: true,
   },
-  productName: {
+  product_name: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -23,7 +23,7 @@ const schema = {
     defaultValue: 10,
     isNumeric: true,
   },
-  categoryID: {
+  category_id: {
     type: DataTypes.INTEGER,
     references: {
       model: "category",

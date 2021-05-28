@@ -9,7 +9,7 @@ const schema = {
     primaryKey: true,
     autoIncrement: true,
   },
-  tagName: {
+  tag_name: {
     type: DataTypes.STRING,
   },
 };
