@@ -56,16 +56,24 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   // update a category by its `id` value
   try {
+    const category = await Category.findByPk(req.params.id);
     const { category_name } = req.body;
-    if (category_name) {
-      const newCategory = await Category.update(req.body, {
-        where: {
-          id: req.params.id,
-        },
-      });
-      res.json(newCategory);
+    if (category) {
+      if (category_name) {
+        const newCategory = await Category.update(req.body, {
+          where: {
+            id: req.params.id,
+          },
+        });
+        res.json(newCategory);
+      } else {
+        console.log(`[ERROR]: Unable to update the category`);
+        res.status(404).json({
+          error: "Unable to update the category",
+        });
+      }
     } else {
-      console.log(`[ERROR]: Unable to update the category`);
+      console.log(`[INVALID CATEGORY ID]: Unable to update the category.`);
       res.status(404).json({
         error: "Unable to update the category",
       });
