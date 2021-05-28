@@ -78,8 +78,30 @@ const updateCategory = async (req, res) => {
   }
 };
 
-const deleteCategory = (req, res) => {
+const deleteCategory = async (req, res) => {
   // delete a category by its `id` value
+  try {
+    const category = await Category.findByPk(req.params.id);
+
+    if (category) {
+      const newCategory = await Category.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.json(newCategory);
+    } else {
+      console.log(`[ERROR]: Unable to delete the category`);
+      res.status(404).json({
+        error: "Unable to delete the category",
+      });
+    }
+  } catch (error) {
+    console.log(`[ERROR]: ${error.message}`);
+    res.status(500).json({
+      error: "Failed to delete category",
+    });
+  }
 };
 
 module.exports = {
