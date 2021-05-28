@@ -9,6 +9,20 @@ const schema = {
     primaryKey: true,
     autoIncrement: true,
   },
+  productId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "product",
+      key: "id",
+    },
+  },
+  tagId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "tag",
+      key: "id",
+    },
+  },
 };
 
 const options = {

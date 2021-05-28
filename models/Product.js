@@ -23,6 +23,13 @@ const schema = {
     defaultValue: 10,
     isNumeric: true,
   },
+  categoryID: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: "category",
+      key: "id",
+    },
+  },
 };
 
 const options = {
