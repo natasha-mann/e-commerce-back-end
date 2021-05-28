@@ -53,8 +53,29 @@ const createCategory = async (req, res) => {
   }
 };
 
-const updateCategory = (req, res) => {
+const updateCategory = async (req, res) => {
   // update a category by its `id` value
+  try {
+    const { category_name } = req.body;
+    if (category_name) {
+      const newCategory = await Category.update(req.body, {
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.json(newCategory);
+    } else {
+      console.log(`[ERROR]: Unable to update the category`);
+      res.status(404).json({
+        error: "Unable to update the category",
+      });
+    }
+  } catch (error) {
+    console.log(`[ERROR]: ${error.message}`);
+    res.status(500).json({
+      error: "Failed to update category",
+    });
+  }
 };
 
 const deleteCategory = (req, res) => {
