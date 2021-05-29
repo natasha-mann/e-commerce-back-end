@@ -5,7 +5,7 @@ const getAllProducts = async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
     const allProducts = await Product.findAll({
-      include: [Category, Tag],
+      include: [Category, { model: Tag, through: ProductTag }],
     });
     res.json(allProducts);
   } catch (err) {
@@ -54,6 +54,7 @@ const createProduct = async (req, res) => {
       price: req.body.price,
       stock: req.body.stock,
       tagIds: req.body.tagIds,
+      category_id: req.body.categoryId,
     };
     const newProduct = await Product.create(newRequest);
 
@@ -64,11 +65,9 @@ const createProduct = async (req, res) => {
           tag_id,
         };
       });
-      const productTagIds = await ProductTag.bulkCreate(productTagIdArr);
-      res.status(200).json(productTagIds);
-    } else {
-      res.status(200).json(newProduct);
+      await ProductTag.bulkCreate(productTagIdArr);
     }
+    res.status(200).json(newProduct);
   } catch (error) {
     console.log(error);
     res.status(400).json(error);
