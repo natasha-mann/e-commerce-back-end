@@ -81,7 +81,7 @@ const updateTag = async (req, res) => {
     } else {
       console.log(`[INVALID TAG ID]: Unable to update the tag.`);
       res.status(404).json({
-        error: "Unable to update the tag",
+        error: "Tag does not exist.",
       });
     }
   } catch (error) {

@@ -26,7 +26,7 @@ const getProduct = async (req, res) => {
     if (product) {
       res.json(product);
     } else {
-      console.log(`[INVALID ID]: Unable to get product by ID`);
+      console.log(`[ERROR]: Product does not exist`);
       res.status(404).json({
         error: "Unable to get product by ID",
       });
@@ -49,28 +49,24 @@ const createProduct = async (req, res) => {
     }
   */
   try {
-    const { id, product_name, price, stock, tagIds } = await Product.create(
-      req.body
-    );
+    const newRequest = {
+      product_name: req.body.product_name,
+      price: req.body.price,
+      stock: req.body.stock,
+      tagIds: req.body.tagIds,
+    };
+    const newProduct = await Product.create(newRequest);
+
     if (req.body.tagIds.length) {
       const productTagIdArr = req.body.tagIds.map((tag_id) => {
         return {
-          product_id: id,
+          product_id: newProduct.id,
           tag_id,
         };
       });
       const productTagIds = await ProductTag.bulkCreate(productTagIdArr);
-      const newObject = {
-        product_name,
-        price,
-        stock,
-        tagIds,
-        ...productTagIds,
-      };
-      console.log(newObject);
-      res.status(200).json(newObject);
+      res.status(200).json(productTagIds);
     } else {
-      console.log("NEW", newProduct);
       res.status(200).json(newProduct);
     }
   } catch (error) {
@@ -133,7 +129,7 @@ const deleteProduct = async (req, res) => {
       });
       res.json(newProduct);
     } else {
-      console.log(`[ERROR]: Unable to delete the product`);
+      console.log(`[ERROR]: Product does not exist`);
       res.status(404).json({
         error: "Unable to delete the product",
       });

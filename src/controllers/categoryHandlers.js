@@ -82,7 +82,7 @@ const updateCategory = async (req, res) => {
     } else {
       console.log(`[INVALID CATEGORY ID]: Unable to update the category.`);
       res.status(404).json({
-        error: "Unable to update the category",
+        error: "Category does not exist.",
       });
     }
   } catch (error) {

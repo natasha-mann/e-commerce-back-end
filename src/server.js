@@ -16,7 +16,7 @@ app.use(routes);
 
 const start = async () => {
   try {
-    await connection.sync({ force: false });
+    await connection.sync();
     app.listen(PORT, () => {
       console.log(`Navigate to http://localhost:${PORT}`);
     });
