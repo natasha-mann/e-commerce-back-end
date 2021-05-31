@@ -43,14 +43,6 @@ const getProduct = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
   try {
     const newRequest = {
       product_name: req.body.product_name,
@@ -61,15 +53,20 @@ const createProduct = async (req, res) => {
     };
     const newProduct = await Product.create(newRequest);
 
-    if (req.body.tagIds.length) {
-      const productTagIdArr = req.body.tagIds.map((tag_id) => {
-        return {
-          product_id: newProduct.id,
-          tag_id,
-        };
-      });
-      await ProductTag.bulkCreate(productTagIdArr);
+    // if tagIds is included as a key in update request
+    if (req.body.tagIds) {
+      // and if it is not an empty array
+      if (req.body.tagIds.length) {
+        const productTagIdArr = req.body.tagIds.map((tag_id) => {
+          return {
+            product_id: newProduct.id,
+            tag_id,
+          };
+        });
+        await ProductTag.bulkCreate(productTagIdArr);
+      }
     }
+
     res.status(200).json(newProduct);
   } catch (error) {
     console.log(error);
