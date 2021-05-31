@@ -6,7 +6,9 @@ const getAllCategories = async (req, res) => {
 
   try {
     const allCategories = await Category.findAll({
-      include: [Product],
+      include: [
+        { model: Product, attributes: ["product_name", "price", "stock"] },
+      ],
     });
     res.json(allCategories);
   } catch (err) {
@@ -22,14 +24,16 @@ const getCategory = async (req, res) => {
   // be sure to include its associated Products
   try {
     const category = await Category.findByPk(req.params.id, {
-      include: [Product],
+      include: [
+        { model: Product, attributes: ["product_name", "price", "stock"] },
+      ],
     });
     if (category) {
       res.json(category);
     } else {
       console.log(`[INVALID ID]: Unable to get category by ID`);
       res.status(404).json({
-        error: "Unable to get category by ID",
+        error: "Unable to get category",
       });
     }
   } catch (err) {
