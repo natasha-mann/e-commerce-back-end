@@ -88,11 +88,11 @@ const updateProduct = async (req, res) => {
       });
     } else {
       const newRequest = {
-        product_name: req.body.product_name || product.product_name,
-        price: req.body.price || product.price,
-        stock: req.body.stock || product.stock,
-        tagIds: req.body.tagIds || product.tagIds,
-        category_id: req.body.categoryId || product.category_id,
+        product_name: req.body.product_name,
+        price: req.body.price,
+        stock: req.body.stock,
+        tagIds: req.body.tagIds,
+        category_id: req.body.categoryId,
       };
 
       const updatedProduct = await Product.update(newRequest, {
