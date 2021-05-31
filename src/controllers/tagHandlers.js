@@ -6,7 +6,9 @@ const getAllTags = async (req, res) => {
 
   try {
     const allTags = await Tag.findAll({
-      include: [Product],
+      include: [
+        { model: Product, attributes: ["product_name", "price", "stock"] },
+      ],
     });
     res.json(allTags);
   } catch (err) {
@@ -22,7 +24,9 @@ const getTag = async (req, res) => {
   // be sure to include its associated Product data
   try {
     const tag = await Tag.findByPk(req.params.id, {
-      include: [Product],
+      include: [
+        { model: Product, attributes: ["product_name", "price", "stock"] },
+      ],
     });
     if (tag) {
       res.json(tag);
