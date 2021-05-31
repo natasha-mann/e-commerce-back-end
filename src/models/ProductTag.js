@@ -15,6 +15,8 @@ const schema = {
       model: "product",
       key: "id",
     },
+    onDelete: "cascade",
+    onUpdate: "cascade",
   },
   tag_id: {
     type: DataTypes.INTEGER,
@@ -22,6 +24,8 @@ const schema = {
       model: "tag",
       key: "id",
     },
+    onDelete: "cascade",
+    onUpdate: "cascade",
   },
 };
 
