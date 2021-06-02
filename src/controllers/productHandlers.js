@@ -5,10 +5,7 @@ const getAllProducts = async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
     const allProducts = await Product.findAll({
-      include: [
-        { model: Category },
-        { model: Tag, through: ProductTag, attributes: ["id", "tag_name"] },
-      ],
+      include: [{ model: Category }, { model: Tag, attributes: ["tag_name"] }],
     });
     res.json(allProducts);
   } catch (err) {
