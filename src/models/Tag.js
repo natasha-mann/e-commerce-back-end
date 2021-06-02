@@ -11,6 +11,7 @@ const schema = {
   },
   tag_name: {
     type: DataTypes.STRING,
+    allowNull: false,
   },
 };
 
