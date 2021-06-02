@@ -71,11 +71,14 @@ const updateCategory = async (req, res) => {
     const { category_name } = req.body;
     if (category) {
       if (category_name) {
-        const newCategory = await Category.update(req.body, {
-          where: {
-            id: req.params.id,
-          },
-        });
+        const newCategory = await Category.update(
+          { category_name },
+          {
+            where: {
+              id: req.params.id,
+            },
+          }
+        );
         res.json(newCategory);
       } else {
         console.log(`[ERROR]: Unable to update the category`);
