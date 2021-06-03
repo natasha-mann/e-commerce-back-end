@@ -1,9 +1,6 @@
 const { Category, Product } = require("../models");
 
 const getAllCategories = async (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
-
   try {
     const allCategories = await Category.findAll({
       include: [
@@ -20,8 +17,6 @@ const getAllCategories = async (req, res) => {
 };
 
 const getCategory = async (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
   try {
     const category = await Category.findByPk(req.params.id, {
       include: [
@@ -65,11 +60,12 @@ const createCategory = async (req, res) => {
 };
 
 const updateCategory = async (req, res) => {
-  // update a category by its `id` value
   try {
     const category = await Category.findByPk(req.params.id);
     const { category_name } = req.body;
+    // if the category trying to be updated doesn't exist
     if (category) {
+      // and if the request body contains new category information
       if (category_name) {
         const newCategory = await Category.update(
           { category_name },
@@ -101,7 +97,6 @@ const updateCategory = async (req, res) => {
 };
 
 const deleteCategory = async (req, res) => {
-  // delete a category by its `id` value
   try {
     const category = await Category.findByPk(req.params.id);
 
