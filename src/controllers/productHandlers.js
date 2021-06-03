@@ -1,11 +1,10 @@
 const { Product, Category, Tag, ProductTag } = require("../models");
 
 const getAllProducts = async (req, res) => {
-  // find all products
-  // be sure to include its associated Category and Tag data
   try {
     const allProducts = await Product.findAll({
-      include: [{ model: Category }, { model: Tag, attributes: ["tag_name"] }],
+      attributes: ["id", "product_name", "price", "stock"],
+      include: [{ model: Category }, { model: Tag }],
     });
     res.json(allProducts);
   } catch (err) {
@@ -17,12 +16,12 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProduct = async (req, res) => {
-  // find a single product by its `id`
-  // be sure to include its associated Category and Tag data
   try {
     const product = await Product.findByPk(req.params.id, {
+      attributes: ["id", "product_name", "price", "stock"],
       include: [Category, Tag],
     });
+
     if (product) {
       res.json(product);
     } else {
@@ -67,7 +66,9 @@ const createProduct = async (req, res) => {
     res.status(200).json(newProduct);
   } catch (error) {
     console.log(error);
-    res.status(400).json(error);
+    res.status(400).json({
+      error: "Failed to add product",
+    });
   }
 };
 
@@ -128,7 +129,7 @@ const updateProduct = async (req, res) => {
 
         const updatedProductTags = [deletedTags, newTags];
 
-        res.json(updatedProductTags);
+        res.json({ ...updatedProduct, ...updatedProductTags });
       } else {
         res.json(updatedProduct);
       }
@@ -140,7 +141,6 @@ const updateProduct = async (req, res) => {
 };
 
 const deleteProduct = async (req, res) => {
-  // delete one product by its `id` value
   try {
     const product = await Product.findByPk(req.params.id);
 

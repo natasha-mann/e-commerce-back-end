@@ -34,7 +34,6 @@ const schema = {
       key: "id",
     },
     onDelete: "cascade",
-    onUpdate: "cascade",
   },
 };
 
