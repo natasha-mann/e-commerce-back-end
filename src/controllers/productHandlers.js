@@ -41,7 +41,7 @@ const getProduct = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const newRequest = {
-      product_name: req.body.product_name,
+      product_name: req.body.productName,
       price: req.body.price,
       stock: req.body.stock,
       tagIds: req.body.tagIds,
@@ -86,7 +86,7 @@ const updateProduct = async (req, res) => {
       });
     } else {
       const newRequest = {
-        product_name: req.body.product_name,
+        product_name: req.body.productName,
         price: req.body.price,
         stock: req.body.stock,
         tagIds: req.body.tagIds,

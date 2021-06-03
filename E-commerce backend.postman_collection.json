@@ -183,7 +183,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n      \"product_name\": \"Basketball\",\r\n      \"price\": 200.00,\r\n      \"stock\": 3,\r\n      \"tagIds\": []   }",
+							"raw": "{\r\n      \"productName\": \"Boots\",\r\n      \"price\": 200.00,\r\n      \"stock\": 3,\r\n      \"tagIds\": [1, 2, 3],\r\n      \"categoryId\": 5  }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -213,7 +213,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryId\": 2,\r\n    \"tagIds\": [\r\n        1,\r\n        2\r\n    ]\r\n}",
+							"raw": "{\r\n    \"productName\": \"Baseball\",\r\n    \"price\": 30\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -221,7 +221,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:3001/api/products/7",
+							"raw": "http://localhost:3001/api/products/5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -230,7 +230,7 @@
 							"path": [
 								"api",
 								"products",
-								"7"
+								"5"
 							]
 						}
 					},
