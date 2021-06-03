@@ -1,9 +1,6 @@
 const { Tag, Product, ProductTag } = require("../models");
 
 const getAllTags = async (req, res) => {
-  // find all tags
-  // be sure to include its associated Product data
-
   try {
     const allTags = await Tag.findAll({
       include: [
@@ -20,8 +17,6 @@ const getAllTags = async (req, res) => {
 };
 
 const getTag = async (req, res) => {
-  // find a single tag by its `id`
-  // be sure to include its associated Product data
   try {
     const tag = await Tag.findByPk(req.params.id, {
       include: [
@@ -47,6 +42,7 @@ const getTag = async (req, res) => {
 const createTag = async (req, res) => {
   try {
     const { tag_name } = req.body;
+
     if (tag_name) {
       const newTag = await Tag.create(req.body);
       res.json(newTag);
@@ -68,7 +64,10 @@ const updateTag = async (req, res) => {
   try {
     const tag = await Tag.findByPk(req.params.id);
     const { tag_name } = req.body;
+
+    // if the tag ID exists
     if (tag) {
+      // if the request body has a new tag name in it
       if (tag_name) {
         const newTag = await Tag.update(req.body, {
           where: {
