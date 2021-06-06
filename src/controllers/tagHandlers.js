@@ -23,14 +23,15 @@ const getTag = async (req, res) => {
         { model: Product, attributes: ["product_name", "price", "stock"] },
       ],
     });
-    if (tag) {
-      res.json(tag);
-    } else {
+
+    if (!tag) {
       console.log(`[INVALID ID]: Unable to get tag by ID`);
-      res.status(404).json({
-        error: "Unable to get tag by ID",
+      return res.status(404).json({
+        error: "Tag does not exist.",
       });
     }
+
+    res.json(tag);
   } catch (err) {
     console.log(`[ERROR]: ${err.message}`);
     res.status(500).json({
@@ -43,15 +44,15 @@ const createTag = async (req, res) => {
   try {
     const { tag_name } = req.body;
 
-    if (tag_name) {
-      const newTag = await Tag.create(req.body);
-      res.json(newTag);
-    } else {
+    if (!tag_name) {
       console.log(`[ERROR]: Unable to create a tag`);
-      res.status(404).json({
+      return res.status(404).json({
         error: "Unable to create a tag",
       });
     }
+
+    const newTag = await Tag.create(req.body);
+    res.json(newTag);
   } catch (error) {
     console.log(`[ERROR]: ${error.message}`);
     res.status(500).json({
@@ -65,28 +66,28 @@ const updateTag = async (req, res) => {
     const tag = await Tag.findByPk(req.params.id);
     const { tag_name } = req.body;
 
-    // if the tag ID exists
-    if (tag) {
-      // if the request body has a new tag name in it
-      if (tag_name) {
-        const newTag = await Tag.update(req.body, {
-          where: {
-            id: req.params.id,
-          },
-        });
-        res.json(newTag);
-      } else {
-        console.log(`[ERROR]: Unable to update the tag`);
-        res.status(404).json({
-          error: "Unable to update the tag",
-        });
-      }
-    } else {
+    // if the tag ID doesn't exist
+    if (!tag) {
       console.log(`[INVALID TAG ID]: Unable to update the tag.`);
-      res.status(404).json({
+      return res.status(404).json({
         error: "Tag does not exist.",
       });
     }
+
+    // if the request body doesn't have a tag name in it
+    if (!tag_name) {
+      console.log(`[ERROR]: Unable to update the tag`);
+      return res.status(404).json({
+        error: "Unable to update the tag",
+      });
+    }
+
+    const newTag = await Tag.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(newTag);
   } catch (error) {
     console.log(`[ERROR]: ${error.message}`);
     res.status(500).json({
@@ -99,19 +100,19 @@ const deleteTag = async (req, res) => {
   try {
     const tag = await Tag.findByPk(req.params.id);
 
-    if (tag) {
-      const newTag = await Tag.destroy({
-        where: {
-          id: req.params.id,
-        },
-      });
-      res.json(newTag);
-    } else {
-      console.log(`[ERROR]: Unable to delete the tag`);
-      res.status(404).json({
-        error: "Unable to delete the tag",
+    if (!tag) {
+      console.log(`[ERROR]: Tag does not exist.`);
+      return res.status(404).json({
+        error: "Tag does not exist.",
       });
     }
+
+    const newTag = await Tag.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(newTag);
   } catch (error) {
     console.log(`[ERROR]: ${error.message}`);
     res.status(500).json({

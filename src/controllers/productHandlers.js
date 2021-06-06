@@ -22,14 +22,14 @@ const getProduct = async (req, res) => {
       include: [Category, Tag],
     });
 
-    if (product) {
-      res.json(product);
-    } else {
+    if (!product) {
       console.log(`[ERROR]: Product does not exist`);
-      res.status(404).json({
-        error: "Unable to get product by ID",
+      return res.status(404).json({
+        error: "Product does not exist.",
       });
     }
+
+    res.json(product);
   } catch (err) {
     console.log(`[ERROR]: ${err.message}`);
     res.status(500).json({
@@ -81,59 +81,59 @@ const updateProduct = async (req, res) => {
 
     if (!product) {
       console.log(`[ERROR]: Product does not exist`);
-      res.status(404).json({
-        error: "Unable to update the product",
+      return res.status(404).json({
+        error: "Product does not exist.",
       });
-    } else {
-      const newRequest = {
-        product_name: req.body.productName,
-        price: req.body.price,
-        stock: req.body.stock,
-        tagIds: req.body.tagIds,
-        category_id: req.body.categoryId,
-      };
-
-      const updatedProduct = await Product.update(newRequest, {
-        where: {
-          id: req.params.id,
-        },
-      });
-
-      // create filtered list of new tag_ids
-      if (req.body.tagIds) {
-        // find all associated tags from ProductTag
-        const productTags = await ProductTag.findAll({
-          where: { product_id: req.params.id },
-        });
-
-        // get list of current tag_ids
-        const productTagIds = productTags.map(({ tag_id }) => tag_id);
-
-        const newProductTags = req.body.tagIds
-          .filter((tag_id) => !productTagIds.includes(tag_id))
-          .map((tag_id) => {
-            return {
-              product_id: req.params.id,
-              tag_id,
-            };
-          });
-        // figure out which ones to remove
-        const productTagsToRemove = productTags
-          .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
-          .map(({ id }) => id);
-        const deletedTags = await ProductTag.destroy({
-          where: { id: productTagsToRemove },
-        });
-        // run both actions
-        const newTags = await ProductTag.bulkCreate(newProductTags);
-
-        const updatedProductTags = [deletedTags, newTags];
-
-        res.json({ ...updatedProduct, ...updatedProductTags });
-      } else {
-        res.json(updatedProduct);
-      }
     }
+
+    const newRequest = {
+      product_name: req.body.productName,
+      price: req.body.price,
+      stock: req.body.stock,
+      tagIds: req.body.tagIds,
+      category_id: req.body.categoryId,
+    };
+
+    const updatedProduct = await Product.update(newRequest, {
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    // create filtered list of new tag_ids
+    if (!req.body.tagIds) {
+      return res.json(updatedProduct);
+    }
+
+    // find all associated tags from ProductTag
+    const productTags = await ProductTag.findAll({
+      where: { product_id: req.params.id },
+    });
+
+    // get list of current tag_ids
+    const productTagIds = productTags.map(({ tag_id }) => tag_id);
+
+    const newProductTags = req.body.tagIds
+      .filter((tag_id) => !productTagIds.includes(tag_id))
+      .map((tag_id) => {
+        return {
+          product_id: req.params.id,
+          tag_id,
+        };
+      });
+    // figure out which ones to remove
+    const productTagsToRemove = productTags
+      .filter(({ tag_id }) => !req.body.tagIds.includes(tag_id))
+      .map(({ id }) => id);
+    const deletedTags = await ProductTag.destroy({
+      where: { id: productTagsToRemove },
+    });
+    // run both actions
+    const newTags = await ProductTag.bulkCreate(newProductTags);
+
+    const updatedProductTags = [deletedTags, newTags];
+
+    return res.json({ ...updatedProduct, ...updatedProductTags });
   } catch (error) {
     console.log(error);
     res.status(400).json(error);
@@ -144,19 +144,19 @@ const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id);
 
-    if (product) {
-      const newProduct = await Product.destroy({
-        where: {
-          id: req.params.id,
-        },
-      });
-      res.json(newProduct);
-    } else {
+    if (!product) {
       console.log(`[ERROR]: Product does not exist`);
-      res.status(404).json({
+      return res.status(404).json({
         error: "Unable to delete the product",
       });
     }
+
+    const newProduct = await Product.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.json(newProduct);
   } catch (error) {
     console.log(`[ERROR]: ${error.message}`);
     res.status(500).json({
