@@ -8,7 +8,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct,
-} = require("../../controllers/productHandlers");
+} = require("../../controllers/api/products");
 
 // The `/api/products` endpoint
 

@@ -8,7 +8,7 @@ const {
   createTag,
   updateTag,
   deleteTag,
-} = require("../../controllers/tagHandlers");
+} = require("../../controllers/api/tags");
 
 // The `/api/tags` endpoint
 
