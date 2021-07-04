@@ -8,7 +8,7 @@ const {
   createCategory,
   updateCategory,
   deleteCategory,
-} = require("../../controllers/categoryHandlers");
+} = require("../../controllers/api/categories");
 
 // The `/api/categories` endpoint
 
