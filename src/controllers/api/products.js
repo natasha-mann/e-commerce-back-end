@@ -1,40 +1,46 @@
 const { Product, Category, Tag, ProductTag } = require("../../models");
 
+const PRODUCT_ATTRIBUTES = ["id", "product_name", "price", "stock"];
+
+const handleError = (req, res, message, error = {}, statusCode = 500) => {
+  if (statusCode === 500) {
+    console.error(`ERROR | ${req.method} | ${req.baseUrl} | ${error.message}`);
+    return res.status(500).json({ error: message });
+  } else {
+    console.error(`ERROR | ${req.method} | ${req.baseUrl} | ${message}`);
+    return res.status(statusCode).json({
+      error: message,
+    });
+  }
+};
+
 const getAllProducts = async (req, res) => {
   try {
     const allProducts = await Product.findAll({
-      attributes: ["id", "product_name", "price", "stock"],
+      attributes: PRODUCT_ATTRIBUTES,
       include: [{ model: Category }, { model: Tag }],
     });
-    res.json(allProducts);
-  } catch (err) {
-    console.log(`[ERROR]: ${err.message}`);
-    res.status(500).json({
-      error: "Failed to get products",
-    });
+
+    return res.json(allProducts);
+  } catch (error) {
+    return handleError(req, res, "Failed to get products", error);
   }
 };
 
 const getProduct = async (req, res) => {
   try {
     const product = await Product.findByPk(req.params.id, {
-      attributes: ["id", "product_name", "price", "stock"],
+      attributes: PRODUCT_ATTRIBUTES,
       include: [Category, Tag],
     });
 
     if (!product) {
-      console.log(`[ERROR]: Product does not exist`);
-      return res.status(404).json({
-        error: "Product does not exist.",
-      });
+      return handleError(req, res, "Product does not exist", undefined, 400);
     }
 
-    res.json(product);
-  } catch (err) {
-    console.log(`[ERROR]: ${err.message}`);
-    res.status(500).json({
-      error: "Failed to get product",
-    });
+    return res.json(product);
+  } catch (error) {
+    return handleError(req, res, "Failed to get product", error);
   }
 };
 
@@ -63,12 +69,9 @@ const createProduct = async (req, res) => {
       }
     }
 
-    res.status(200).json(newProduct);
+    return res.status(200).json(newProduct);
   } catch (error) {
-    console.log(error);
-    res.status(400).json({
-      error: "Failed to add product",
-    });
+    return handleError(req, res, "Failed to add product", error);
   }
 };
 
@@ -80,10 +83,7 @@ const updateProduct = async (req, res) => {
     });
 
     if (!product) {
-      console.log(`[ERROR]: Product does not exist`);
-      return res.status(404).json({
-        error: "Product does not exist.",
-      });
+      return handleError(req, res, "Product does not exist", undefined, 400);
     }
 
     const newRequest = {
@@ -135,8 +135,7 @@ const updateProduct = async (req, res) => {
 
     return res.json({ ...updatedProduct, ...updatedProductTags });
   } catch (error) {
-    console.log(error);
-    res.status(400).json(error);
+    return handleError(req, res, "Failed to update product", error);
   }
 };
 
@@ -145,10 +144,13 @@ const deleteProduct = async (req, res) => {
     const product = await Product.findByPk(req.params.id);
 
     if (!product) {
-      console.log(`[ERROR]: Product does not exist`);
-      return res.status(404).json({
-        error: "Unable to delete the product",
-      });
+      return handleError(
+        req,
+        res,
+        "Unable to delete the product",
+        undefined,
+        400
+      );
     }
 
     const newProduct = await Product.destroy({
@@ -156,12 +158,9 @@ const deleteProduct = async (req, res) => {
         id: req.params.id,
       },
     });
-    res.json(newProduct);
+    return res.json({ success: !!newProduct });
   } catch (error) {
-    console.log(`[ERROR]: ${error.message}`);
-    res.status(500).json({
-      error: "Failed to delete product",
-    });
+    return handleError(req, res, "Failed to delete product", error);
   }
 };
 
